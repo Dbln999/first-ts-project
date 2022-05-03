@@ -1,24 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./index.css";
+import "./TodoField";
+import { TodoField } from "./TodoField";
+import { Itodo } from "./interfaces";
+import set = Reflect.set;
 
 function App() {
+  const [todos, setTodos] = useState<Itodo[]>([]);
+  const addBtnHandler = (title: string) => {
+    const newTodo: Itodo = {
+      title: title,
+      id: Date.now(),
+      completed: false,
+    };
+    setTodos((perv) => [newTodo, ...perv]);
+  };
+
+  const removeTodo = (id: number) => {
+    setTodos((perv) => perv.filter((todo) => todo.id !== id));
+  };
+
+  const editTodo = (id: number, title: string) => {
+    todos.map((todo) => {
+      if (id === todo.id) {
+        todo.title = title;
+      }
+    });
+    console.log(todos)
+
+  };
+
+
+  const checkBoxHandler = (id: number) => {
+    todos.map((todo) => {
+      if (id === todo.id) {
+        todo.completed = !todo.completed;
+      }
+    });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <TodoField
+        checkBoxHandler={checkBoxHandler}
+        todos={todos}
+        addBtnHandler={addBtnHandler}
+        removeTodo={removeTodo}
+        editTodo={editTodo}
+      />
     </div>
   );
 }
